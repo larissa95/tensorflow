@@ -18,6 +18,7 @@ limitations under the License.
 #include <deque>
 #include <unordered_map>
 #include <vector>
+#include <iostream>
 
 #include "tensorflow/core/framework/memory_types.h"
 #include "tensorflow/core/framework/node_def_builder.h"
@@ -181,6 +182,7 @@ NodeDef* AddSend(const PartitionOptions& opts, const GraphInfo& g_info,
                  GraphDef* gdef, const Edge* edge,
                  NodeDefBuilder::NodeOut send_from, int64 start_time,
                  Status* status) {
+    std::cout << "Graph Partition: Add Send" << std::endl;
   const DataType dtype = send_from.data_type;
   const DataType cast_dtype = opts.should_cast ? opts.should_cast(edge) : dtype;
   const Node* src = edge->src();
@@ -228,6 +230,7 @@ NodeDef* AddSend(const PartitionOptions& opts, const GraphInfo& g_info,
 NodeDef* AddRecv(const PartitionOptions& opts, const GraphInfo& g_info,
                  GraphDef* gdef, const Edge* edge, NodeDef** real_recv,
                  Status* status) {
+    std::cout << "Graph Partition: Add Recv" << std::endl;
   const DataType dtype = EdgeType(edge);
   const Node* src = edge->src();
   const Node* dst = edge->dst();
@@ -687,6 +690,7 @@ const Node* OutputFrame(const Node* node,
 // it wrong many times so it would be nice to write a proof to be sure.
 Status AddControlFlow(const PartitionOptions& opts, Graph* g,
                       GraphInfo* g_info) {
+    std::cout << "Graph Partition:AddControlFlow" << std::endl;
   Status status;
   GraphDefBuilder::Options bopts(g, &status);
   std::vector<ControlFlowInfo>& cf_info = g_info->cf_info;
@@ -833,6 +837,7 @@ Status AddControlFlow(const PartitionOptions& opts, Graph* g,
 
 Status AddControlEdges(const PartitionOptions& opts,
                        std::unordered_map<string, GraphDef>* partitions) {
+  std::cout << "Graph Partition: Add Control Edges" << std::endl;
   Status status;
   // TODO(yuanbyu): Very naive for now. To be improved.
   const int num_epochs = 100;
@@ -908,6 +913,11 @@ Status AddControlEdges(const PartitionOptions& opts,
 
 Status Partition(const PartitionOptions& opts, Graph* g,
                  std::unordered_map<string, GraphDef>* partitions) {
+    std::cout << "Graph Partition: Partition" << std::endl << std::endl;
+    for (const Node* node : g->nodes()) {
+        std::cout << node->name() << std::endl;
+    }
+    
   Status status;
   partitions->clear();
 

@@ -17,6 +17,7 @@ limitations under the License.
 
 #include <unordered_map>
 #include <vector>
+#include <iostream>
 
 #include "tensorflow/core/platform/env.h"
 #include "tensorflow/core/protobuf/config.pb.h"
@@ -81,6 +82,7 @@ Status ClientSession::Run(const RunOptions& run_options, const FeedType& inputs,
                           const std::vector<ops::Operation>& run_outputs,
                           std::vector<Tensor>* outputs,
                           RunMetadata* run_metadata) const {
+    std::cout << "ClientSession::RUN" << std::endl;
   std::vector<std::pair<string, Tensor>> feeds;
   for (auto const& feed : inputs) {
     TF_RETURN_IF_ERROR(feed.second.status);

@@ -18,6 +18,7 @@ limitations under the License.
 #include <atomic>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "tensorflow/core/common_runtime/constant_folding.h"
 #include "tensorflow/core/common_runtime/device_factory.h"
@@ -341,6 +342,7 @@ Status DirectSession::Run(const RunOptions& run_options,
                           const std::vector<string>& target_nodes,
                           std::vector<Tensor>* outputs,
                           RunMetadata* run_metadata) {
+    std::cout << "DirectSession::Run" << std::endl;
   TF_RETURN_IF_ERROR(CheckNotClosed());
   direct_session_runs->GetCell()->IncrementBy(1);
   {
@@ -493,6 +495,7 @@ Status DirectSession::PRunSetup(const std::vector<string>& input_names,
                                 const std::vector<string>& output_names,
                                 const std::vector<string>& target_nodes,
                                 string* handle) {
+    std::cout << "DirectSession:PRunSetup" << std::endl;
   TF_RETURN_IF_ERROR(CheckNotClosed());
   {
     mutex_lock l(graph_def_lock_);
@@ -798,6 +801,8 @@ Status DirectSession::GetOrCreateExecutors(
   // executors when a user passes in the same inputs/outputs in
   // different orders.
   //
+    std::cout<<"DirectSession:GetOrCreateExecutors" << std::endl;
+
   // We could consider some other signature instead of sorting that
   // preserves the same property to avoid the sort in the future.
   std::vector<string> inputs_sorted(inputs.begin(), inputs.end());
@@ -953,6 +958,7 @@ Status DirectSession::CreateGraphs(
     std::unordered_map<string, std::unique_ptr<Graph>>* outputs,
     std::unique_ptr<FunctionLibraryDefinition>* flib_def,
     RunStateArgs* run_state_args) {
+    std::cout<<"DirectSession:CreateGraphs" << std::endl;
   mutex_lock l(graph_def_lock_);
   std::unique_ptr<SimpleClientGraph> client_graph;
 

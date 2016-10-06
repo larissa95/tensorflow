@@ -14,7 +14,7 @@ limitations under the License.
 ==============================================================================*/
 
 #include "tensorflow/core/graph/costmodel.h"
-
+#include <iostream>
 #include <vector>
 #include "tensorflow/core/framework/step_stats.pb.h"
 #include "tensorflow/core/graph/graph.h"
@@ -48,6 +48,7 @@ void CostModel::SuppressInfrequent() {
 }
 
 void CostModel::MergeFromLocal(const Graph& g, const CostModel& cm) {
+    std::cout << "Cost Model: Merge From Local" << std::endl;
   CHECK(is_global_);
   CHECK(!cm.is_global());
   for (const Node* n : g.nodes()) {
@@ -72,6 +73,7 @@ void CostModel::MergeFromLocal(const Graph& g, const CostModel& cm) {
 }
 
 void CostModel::MergeFromGlobal(const CostModel& cm) {
+    std::cout << "Cost Model: Merge From Global" << std::endl;
   CHECK(is_global_);
   CHECK_EQ(true, cm.is_global());
   const int num_nodes = cm.count_.size();
@@ -95,6 +97,7 @@ void CostModel::MergeFromGlobal(const CostModel& cm) {
 
 void CostModel::MergeFromStats(const NodeNameToCostIdMap& map,
                                const StepStats& ss) {
+    std::cout << "Cost Model: Merge From Stats" << std::endl;
   CHECK(is_global_);
   for (auto& ds : ss.dev_stats()) {
     for (auto& ns : ds.node_stats()) {
@@ -176,6 +179,7 @@ void CostModel::RecordSize(const Node* node, int slot, Bytes bytes) {
 }
 
 Bytes CostModel::TotalBytes(const Node* node, int slot) const {
+    std::cout << "Cost Model: Total Bytes" << std::endl;
   const int id = Id(node);
   if (id < 0 || static_cast<size_t>(id) >= slot_bytes_.size() ||
       slot_bytes_[id].size() <= static_cast<size_t>(slot)) {
@@ -191,6 +195,7 @@ Bytes CostModel::SizeEstimate(const Node* node, int slot) const {
 }
 
 void CostModel::RecordTime(const Node* node, Microseconds time) {
+    std::cout << "Cost Model: record time" << std::endl;
   const int id = Id(node);
   if (id < 0) return;
   DCHECK(node->IsOp()) << node->DebugString();
@@ -209,6 +214,7 @@ Microseconds CostModel::TotalTime(const Node* node) const {
 }
 
 Microseconds CostModel::TimeEstimate(const Node* node) const {
+    std::cout << "Cost Model: Time estimate" << std::endl;
   int32 count = TotalCount(node);
   if (count <= min_count_) return kMinTimeEstimate;
   return std::max(kMinTimeEstimate, TotalTime(node) / std::max(1, count));
@@ -234,6 +240,7 @@ void CostModel::CheckInitialized(const Graph& graph) const {
 
 void CostModel::RecordMaxMemorySize(const Node* node, int output_slot,
                                     Bytes bytes) {
+    std::cout << "Cost Model: RecordMaxMemorySize" << std::endl;
   const int id = Id(node);
   if (id < 0) return;
   Ensure(id);
@@ -266,6 +273,7 @@ void CostModel::RecordMaxExecutionTime(const Node* node, Microseconds time) {
 }
 
 Microseconds CostModel::MaxExecutionTime(const Node* node) const {
+    std::cout << "Cost Model: MaxExecutionTime" << std::endl;
   const int id = Id(node);
   if (id < 0 || static_cast<size_t>(id) >= max_exec_time_.size()) {
     return Microseconds(0);
@@ -322,6 +330,7 @@ Microseconds CostModel::ComputationTimeEstimate(int64 math_ops) {
 namespace {
 
 static void AddNodesToCostModel(const Graph& g, CostModel* cost_model) {
+    std::cout << "Cost Model: AddNodesToCostModel" << std::endl;
   for (Node* n : g.nodes()) {
     const int num_outputs = n->num_outputs();
     cost_model->SetNumOutputs(n, num_outputs);
@@ -380,6 +389,7 @@ void CostModel::InitFromGraph(const Graph& g) {
 
 void CostModel::AddToCostGraphDef(const Graph* graph,
                                   CostGraphDef* cost_graph) const {
+    std::cout << "Cost Model: AddToCostGraphDef" << std::endl;
   std::vector<const Edge*> inputs;
   std::vector<const Edge*> control_inputs;
   for (const Node* n : graph->nodes()) {

@@ -18,6 +18,8 @@ limitations under the License.
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <iostream>
+
 
 #include "tensorflow/core/common_runtime/device_set.h"
 #include "tensorflow/core/common_runtime/process_util.h"
@@ -455,6 +457,7 @@ void MasterSession::ReffedClientGraph::TrackFeedsAndFetches(
 Status MasterSession::ReffedClientGraph::DoRegisterPartitions(
     const MasterEnv* env, const PartitionOptions& popts_in,
     const FunctionDefLibrary& func_def_lib) {
+    std::cout << "MasterSession::RegisterPartitions" << std::endl;
   PartitionOptions popts = popts_in;
   if (popts.need_to_record_start_times) {
     CostModel cost_model(true);

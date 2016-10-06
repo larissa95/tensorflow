@@ -19,6 +19,7 @@ limitations under the License.
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include <iostream>
 
 #include "tensorflow/core/common_runtime/device.h"
 #include "tensorflow/core/common_runtime/optimization_registry.h"
@@ -77,6 +78,7 @@ Status SimpleGraphExecutionState::Extend(
   for (const NodeDef& node : extension_def.node()) {
     new_names.insert(node.name());
   }
+    std::cout << "SimpleGraphExecutionState::Extend" << std::endl;
 
   // 2. Add the non-duplicates from the old graph to the new graph.
   //    Return an error if the same node name appears in both the
@@ -176,6 +178,7 @@ void SimpleGraphExecutionState::RestoreStatefulNodes(Graph* graph) {
 
 Status SimpleGraphExecutionState::InitBaseGraph(
     const BuildGraphOptions& options) {
+    std::cout << "SimpleGraphExecutionState::InitBaseGraph" << std::endl;
   std::unique_ptr<Graph> new_graph(new Graph(flib_def_.get()));
   GraphConstructorOptions opts;
   TF_RETURN_IF_ERROR(

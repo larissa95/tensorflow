@@ -19,6 +19,7 @@ limitations under the License.
 #include <set>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 #include "tensorflow/core/common_runtime/device.h"
 #include "tensorflow/core/framework/device_attributes.pb.h"
@@ -137,6 +138,8 @@ class ColocationGraph {
   // NOTE: If this method returns an error, *this is left in an undefined
   // state.
   Status AddNode(const Node& node) {
+      std::cout << "Simple Placer: Add node: " << node.name() << std::endl;
+      //node.DebugString()
     Member member;
     TF_RETURN_IF_ERROR(InitializeMember(node, &member));
     CHECK_GE(member.parent, 0);
@@ -174,6 +177,8 @@ class ColocationGraph {
   // NOTE: If this method returns an error, *this is left in an undefined
   // state.
   Status ColocateNodes(const Node& x, const Node& y) {
+      std::cout << "SimplePlacer: Colocate Nodes" << std::endl;
+
     int x_root = FindRoot(x.id());
     int y_root = FindRoot(y.id());
 
