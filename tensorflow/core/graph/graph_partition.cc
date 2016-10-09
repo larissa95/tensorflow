@@ -915,7 +915,7 @@ Status Partition(const PartitionOptions& opts, Graph* g,
                  std::unordered_map<string, GraphDef>* partitions) {
     std::cout << "Graph Partition: Partition" << std::endl << std::endl;
     for (const Node* node : g->nodes()) {
-        std::cout << node->name() << std::endl;
+        std::cout << node->name() << ",   device" << node->assigned_device_name() << "user requested device" << node->def().device() << std::endl;
     }
     
   Status status;

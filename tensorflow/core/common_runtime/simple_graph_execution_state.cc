@@ -23,6 +23,7 @@ limitations under the License.
 
 #include "tensorflow/core/common_runtime/device.h"
 #include "tensorflow/core/common_runtime/optimization_registry.h"
+#include "tensorflow/core/common_runtime/costum_placer.h"
 #include "tensorflow/core/common_runtime/simple_placer.h"
 #include "tensorflow/core/framework/graph.pb_text.h"
 #include "tensorflow/core/framework/graph_def_util.h"
@@ -214,6 +215,9 @@ Status SimpleGraphExecutionState::InitBaseGraph(
   SimplePlacer placer(new_graph.get(), device_set_, session_options_);
   // TODO(mrry): Consider making the SimplePlacer cancelable.
   TF_RETURN_IF_ERROR(placer.Run());
+    
+  CostumPlacer placer_costum(new_graph.get(), device_set_, session_options_, &costs);
+  TF_RETURN_IF_ERROR(placer_costum.Run());
 
   TF_RETURN_IF_ERROR(OptimizationPassRegistry::Global()->RunGrouping(
       OptimizationPassRegistry::POST_PLACEMENT, optimization_options));
