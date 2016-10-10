@@ -85,7 +85,7 @@ namespace tensorflow {
         std::vector<string> device_names;
         for(std::vector<Device*>::const_iterator it = devices.begin(); it != devices.end(); ++it){
             std::cout << (*it)->DebugString() << std::endl;
-            device_names.push_back((*it)->name);
+            device_names.push_back((*it)->name());
         }
         
         std::cout << "Anzahl Knoten" <<graph_->num_nodes() << std::endl;
@@ -97,10 +97,15 @@ namespace tensorflow {
                 int costId = node->cost_id();
                 std::cout << "assigned to first device: " << node->DebugString() << std::endl << "CostId" << (char) costId << std::endl;
                 //node->in_edges(); node->out_edges(),
+                
+                
                 hash = (hash + 1) % device_names.size();
-                string assigned_device = devices_names.at(hash);
+                std::cout << "Hash:" << hash << std::endl;
+                string assigned_device = device_names.at(hash);
                 if (CanAssignToDevice(assigned_device, devices)) {
                     AssignAndLog(assigned_device, node);
+                }else{
+                    std::cout << "Deivce could not be assigned" << std::endl;
                 }
             }
             

@@ -212,9 +212,9 @@ Status SimpleGraphExecutionState::InitBaseGraph(
   TF_RETURN_IF_ERROR(OptimizationPassRegistry::Global()->RunGrouping(
       OptimizationPassRegistry::PRE_PLACEMENT, optimization_options));
 
-  SimplePlacer placer(new_graph.get(), device_set_, session_options_);
+  //SimplePlacer placer(new_graph.get(), device_set_, session_options_);
   // TODO(mrry): Consider making the SimplePlacer cancelable.
-  TF_RETURN_IF_ERROR(placer.Run());
+  //TF_RETURN_IF_ERROR(placer.Run());
     
   CostumPlacer placer_costum(new_graph.get(), device_set_, session_options_, &costs);
   TF_RETURN_IF_ERROR(placer_costum.Run());
