@@ -97,11 +97,12 @@ namespace tensorflow {
                 int costId = node->cost_id();
                 std::cout << "assigned to first device: " << node->DebugString() << std::endl << "CostId" << (char) costId << std::endl;
                 //node->in_edges(); node->out_edges(),
-                
+                //bringt nicht weil nie durchgelaufen
+                //std::cout << "Size estimate: " << cost_model_->SizeEstimate(node, 0) << std::endl;
                 
                 hash = (hash + 1) % device_names.size();
                 std::cout << "Hash:" << hash << std::endl;
-                string assigned_device = device_names.at(hash);
+                string assigned_device = device_names.at(0);
                 if (CanAssignToDevice(assigned_device, devices)) {
                     AssignAndLog(assigned_device, node);
                 }else{
